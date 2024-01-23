@@ -1,53 +1,34 @@
-use lambda_runtime::{run, service_fn, Error, LambdaEvent};
+// using aws-lambda-rust-runtime
+// @see https://github.com/awslabs/aws-lambda-rust-runtime
 
-use serde::{Deserialize, Serialize};
+use lambda_runtime::{service_fn, Error, LambdaEvent};
+use serde_json::Value;
 
-/// This is a made-up example. Requests come into the runtime as unicode
-/// strings in json format, which can map to any structure that implements `serde::Deserialize`
-/// The runtime pays no attention to the contents of the request payload.
-#[derive(Deserialize)]
-struct Request {
-    command: String,
-}
-
-/// This is a made-up example of what a response structure may look like.
-/// There is no restriction on what it can be. The runtime requires responses
-/// to be serialized into json. The runtime pays no attention
-/// to the contents of the response payload.
-#[derive(Serialize)]
-struct Response {
-    req_id: String,
-    msg: String,
-}
-
-/// This is the main body for the function.
-/// Write your code inside it.
-/// There are some code example in the following URLs:
-/// - https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
-/// - https://github.com/aws-samples/serverless-rust-demo/
-async fn function_handler(event: LambdaEvent<Request>) -> Result<Response, Error> {
-    // Extract some useful info from the request
-    let command = event.payload.command;
-
-    // Prepare the response
-    let resp = Response {
-        req_id: event.context.request_id,
-        msg: format!("Command {}.", command),
-    };
-
-    // Return `Response` (it will be serialized to JSON automatically by the runtime)
-    Ok(resp)
-}
+mod commands;
+use commands::convert_page_to_html::convert_page_to_html;
+use commands::convert_page_to_markdown::convert_page_to_markdown;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::INFO)
-        // disable printing the name of the module in every log line.
-        .with_target(false)
-        // disabling time is handy because CloudWatch will add the ingestion time.
-        .without_time()
-        .init();
+    let handle_lambda_event = service_fn(handle_lambda_event);
+    lambda_runtime::run(handle_lambda_event).await?;
+    Ok(())
+}
 
-    run(service_fn(function_handler)).await
+async fn handle_lambda_event(event: LambdaEvent<Value>) -> Result<Value, Error> {
+    let (event, _context) = event.into_parts();
+    let command = event["command"]
+        .as_str()
+        .ok_or_else(|| Error::from("The command field is missing or not a string"))?;
+
+    event["NOTION_API_KEY"]
+        .as_str()
+        .ok_or_else(|| Error::from("The NOTION_API_KEY field is missing or not a string"))?;
+
+    // invoke the corresponding function according to the command value
+    match command {
+        "convert_page_to_html" => convert_page_to_html(event).await,
+        "convert_page_to_markdown" => convert_page_to_markdown(event).await,
+        _ => Err(Error::from(format!("Unknown command: {}", command))),
+    }
 }
