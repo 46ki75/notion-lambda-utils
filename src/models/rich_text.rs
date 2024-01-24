@@ -47,9 +47,9 @@ pub enum RichTextElement {
 
 #[derive(Deserialize, Serialize)]
 pub struct RichText {
-    rich_text: Vec<RichTextElement>,
-    is_toggleable: Option<bool>,
-    color: Color,
+    pub rich_text: Vec<RichTextElement>,
+    pub is_toggleable: Option<bool>,
+    pub color: Color,
 }
 
 /// --------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ pub struct RichText {
 #[derive(Deserialize, Serialize)]
 pub struct Equation {
     /// The LaTeX string representing the inline equation.
-    expression: String,
+    pub expression: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -77,28 +77,28 @@ pub enum Mention {
 
 #[derive(Deserialize, Serialize)]
 pub struct DatabaseMention {
-    id: String,
+    pub id: String,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct DateMention {
-    start: Option<String>,
-    end: Option<String>,
+    pub start: Option<String>,
+    pub end: Option<String>,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct LinkPreviewMention {
-    url: String,
+    pub url: String,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct PageMention {
-    id: String,
+    pub id: String,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct UserMention {
-    id: String,
+    pub id: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -107,36 +107,36 @@ pub struct UserMention {
 #[derive(Deserialize, Serialize)]
 pub struct Text {
     /// The actual text content of the text.
-    content: String,
+    pub content: String,
 
     /// An object with information about any inline link in this text, if included.
     /// If the text contains an inline link, then the object key is url and the value is the URL’s string web address.
     /// If the text doesn’t have any inline links, then the value is null.
-    link: Option<Link>,
+    pub link: Option<Link>,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Link {
     /// The URL's string web address.
-    url: String,
+    pub url: String,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Annotations {
     /// Whether the text is bolded.
-    bold: bool,
+    pub bold: bool,
 
     /// Whether the text is italicized.
-    italic: bool,
+    pub italic: bool,
 
     /// Whether the text is struck through.
-    strikethrough: bool,
+    pub strikethrough: bool,
 
     /// Whether the text is underlined.
-    underline: bool,
+    pub underline: bool,
 
     /// Whether the text is code style.
-    code: bool,
+    pub code: bool,
 
     /// Color of the text. Possible values include:
     /// - `blue`
@@ -158,5 +158,5 @@ pub struct Annotations {
     /// - `red_background`
     /// - `yellow`
     /// - `yellow_background`
-    color: Color,
+    pub color: Color,
 }

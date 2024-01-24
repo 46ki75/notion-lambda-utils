@@ -18,28 +18,28 @@ use crate::models::rich_text::{RichText, RichTextElement};
 /// and more that you can interact with in the Notion UI as different block type objects.
 #[derive(Deserialize, Serialize)]
 pub struct BaseBlock {
-    object: String,
-    id: String,
-    parent: ParentObject,
-    created_time: String,
-    last_edited_time: String,
-    created_by: User,
-    last_edited_by: User,
-    has_children: bool,
-    archived: bool,
+    pub object: String,
+    pub id: String,
+    pub parent: ParentObject,
+    pub created_time: String,
+    pub last_edited_time: String,
+    pub created_by: User,
+    pub last_edited_by: User,
+    pub has_children: bool,
+    pub archived: bool,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct BlockChildren {
     // always "list"
-    object: String,
+    pub object: String,
     pub results: Vec<Block>,
     pub next_cursor: Option<String>,
     pub has_more: bool,
     // always "block"
-    r#type: String,
-    block: Value,
-    request_id: String,
+    pub r#type: String,
+    pub block: Value,
+    pub request_id: String,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -90,14 +90,14 @@ pub enum Block {
 #[derive(Deserialize, Serialize)]
 pub struct BookmarkBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    bookmark: BookmarkField,
+    pub base: BaseBlock,
+    pub bookmark: BookmarkField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct BookmarkField {
-    caption: Vec<RichTextElement>,
-    url: String,
+    pub caption: Vec<RichTextElement>,
+    pub url: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -107,8 +107,8 @@ pub struct BookmarkField {
 #[derive(Deserialize, Serialize)]
 pub struct BreadcrumbBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    breadcrumb: Value,
+    pub base: BaseBlock,
+    pub breadcrumb: Value,
 }
 
 /// --------------------------------------------------------------------------------
@@ -118,8 +118,8 @@ pub struct BreadcrumbBlock {
 #[derive(Deserialize, Serialize)]
 pub struct BulletedListItemBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    bulleted_list_item: RichText,
+    pub base: BaseBlock,
+    pub bulleted_list_item: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -129,15 +129,15 @@ pub struct BulletedListItemBlock {
 #[derive(Deserialize, Serialize)]
 pub struct CalloutBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    callout: CalloutField,
+    pub base: BaseBlock,
+    pub callout: CalloutField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct CalloutField {
-    rich_text: Vec<RichTextElement>,
-    icon: EmojiObject,
-    color: Color,
+    pub rich_text: Vec<RichTextElement>,
+    pub icon: EmojiObject,
+    pub color: Color,
 }
 
 /// --------------------------------------------------------------------------------
@@ -147,8 +147,8 @@ pub struct CalloutField {
 #[derive(Deserialize, Serialize)]
 pub struct ChildDatabaseBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    title: String,
+    pub base: BaseBlock,
+    pub title: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -158,8 +158,8 @@ pub struct ChildDatabaseBlock {
 #[derive(Deserialize, Serialize)]
 pub struct ChildPageBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    title: String,
+    pub base: BaseBlock,
+    pub title: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -169,15 +169,15 @@ pub struct ChildPageBlock {
 #[derive(Deserialize, Serialize)]
 pub struct CodeBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    code: CodeField,
+    pub base: BaseBlock,
+    pub code: CodeField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct CodeField {
-    caption: Vec<RichTextElement>,
-    rich_text: Vec<RichTextElement>,
-    language: ProgrammingLanguage,
+    pub caption: Vec<RichTextElement>,
+    pub rich_text: Vec<RichTextElement>,
+    pub language: ProgrammingLanguage,
 }
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -335,8 +335,8 @@ pub enum ProgrammingLanguage {
 #[derive(Deserialize, Serialize)]
 pub struct ColumnBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    column: Value,
+    pub base: BaseBlock,
+    pub column: Value,
 }
 
 /// --------------------------------------------------------------------------------
@@ -346,8 +346,8 @@ pub struct ColumnBlock {
 #[derive(Deserialize, Serialize)]
 pub struct ColumnListBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    column_list: Value,
+    pub base: BaseBlock,
+    pub column_list: Value,
 }
 
 /// --------------------------------------------------------------------------------
@@ -357,8 +357,8 @@ pub struct ColumnListBlock {
 #[derive(Deserialize, Serialize)]
 pub struct DividerBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    divider: Value,
+    pub base: BaseBlock,
+    pub divider: Value,
 }
 
 /// --------------------------------------------------------------------------------
@@ -368,13 +368,13 @@ pub struct DividerBlock {
 #[derive(Deserialize, Serialize)]
 pub struct EmbedBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    embed: EmbedField,
+    pub base: BaseBlock,
+    pub embed: EmbedField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct EmbedField {
-    url: String,
+    pub url: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -384,13 +384,13 @@ pub struct EmbedField {
 #[derive(Deserialize, Serialize)]
 pub struct EquationBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    equation: EquationField,
+    pub base: BaseBlock,
+    pub equation: EquationField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct EquationField {
-    expression: String,
+    pub expression: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -400,8 +400,8 @@ pub struct EquationField {
 #[derive(Deserialize, Serialize)]
 pub struct FileBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    file: FileObject,
+    pub base: BaseBlock,
+    pub file: FileObject,
 }
 
 /// --------------------------------------------------------------------------------
@@ -411,22 +411,22 @@ pub struct FileBlock {
 #[derive(Deserialize, Serialize)]
 pub struct Heading1Block {
     #[serde(flatten)]
-    base: BaseBlock,
-    heading_1: RichText,
+    pub base: BaseBlock,
+    pub heading_1: RichText,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Heading2Block {
     #[serde(flatten)]
-    base: BaseBlock,
-    heading_2: RichText,
+    pub base: BaseBlock,
+    pub heading_2: RichText,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Heading3Block {
     #[serde(flatten)]
-    base: BaseBlock,
-    heading_3: RichText,
+    pub base: BaseBlock,
+    pub heading_3: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -436,8 +436,8 @@ pub struct Heading3Block {
 #[derive(Deserialize, Serialize)]
 pub struct ImageBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    image: FileObject,
+    pub base: BaseBlock,
+    pub image: FileObject,
 }
 
 /// --------------------------------------------------------------------------------
@@ -447,13 +447,13 @@ pub struct ImageBlock {
 #[derive(Deserialize, Serialize)]
 pub struct LinkPreviewBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    link_preview: LinkPreviewField,
+    pub base: BaseBlock,
+    pub link_preview: LinkPreviewField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct LinkPreviewField {
-    url: String,
+    pub url: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -463,8 +463,8 @@ pub struct LinkPreviewField {
 #[derive(Deserialize, Serialize)]
 pub struct NumberedListItemBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    numbered_list_item: RichText,
+    pub base: BaseBlock,
+    pub numbered_list_item: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -474,13 +474,13 @@ pub struct NumberedListItemBlock {
 #[derive(Deserialize, Serialize)]
 pub struct MentionBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    page: MentionField,
+    pub base: BaseBlock,
+    pub page: MentionField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct MentionField {
-    id: String,
+    pub id: String,
 }
 
 /// --------------------------------------------------------------------------------
@@ -490,8 +490,8 @@ pub struct MentionField {
 #[derive(Deserialize, Serialize)]
 pub struct ParagraphBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    paragraph: RichText,
+    pub base: BaseBlock,
+    pub paragraph: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -501,8 +501,8 @@ pub struct ParagraphBlock {
 #[derive(Deserialize, Serialize)]
 pub struct PDFBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    pdf: PDFField,
+    pub base: BaseBlock,
+    pub pdf: PDFField,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -519,8 +519,8 @@ pub enum PDFField {
 #[derive(Deserialize, Serialize)]
 pub struct QuoteBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    quote: RichText,
+    pub base: BaseBlock,
+    pub quote: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -530,8 +530,8 @@ pub struct QuoteBlock {
 #[derive(Deserialize, Serialize)]
 pub struct SyncedBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    synced_block: Value,
+    pub base: BaseBlock,
+    pub synced_block: Value,
 }
 
 /// --------------------------------------------------------------------------------
@@ -541,15 +541,15 @@ pub struct SyncedBlock {
 #[derive(Deserialize, Serialize)]
 pub struct TableBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    table: TableField,
+    pub base: BaseBlock,
+    pub table: TableField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct TableField {
-    table_width: u32,
-    has_column_header: bool,
-    has_row_header: bool,
+    pub table_width: u32,
+    pub has_column_header: bool,
+    pub has_row_header: bool,
 }
 
 /// --------------------------------------------------------------------------------
@@ -559,13 +559,13 @@ pub struct TableField {
 #[derive(Deserialize, Serialize)]
 pub struct TableOfContentsBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    table_of_contents: TableOfContentsField,
+    pub base: BaseBlock,
+    pub table_of_contents: TableOfContentsField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct TableOfContentsField {
-    color: Color,
+    pub color: Color,
 }
 
 /// --------------------------------------------------------------------------------
@@ -575,13 +575,13 @@ pub struct TableOfContentsField {
 #[derive(Deserialize, Serialize)]
 pub struct TableRowBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    table_row: TableRowField,
+    pub base: BaseBlock,
+    pub table_row: TableRowField,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct TableRowField {
-    cells: Vec<Vec<RichTextElement>>,
+    pub cells: Vec<Vec<RichTextElement>>,
 }
 
 /// --------------------------------------------------------------------------------
@@ -597,8 +597,8 @@ pub struct TableRowField {
 #[derive(Deserialize, Serialize)]
 pub struct TemplateBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    template: RichText,
+    pub base: BaseBlock,
+    pub template: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -608,8 +608,8 @@ pub struct TemplateBlock {
 #[derive(Deserialize, Serialize)]
 pub struct ToDoBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    to_do: RichText,
+    pub base: BaseBlock,
+    pub to_do: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -619,8 +619,8 @@ pub struct ToDoBlock {
 #[derive(Deserialize, Serialize)]
 pub struct ToggleBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    toggle: RichText,
+    pub base: BaseBlock,
+    pub toggle: RichText,
 }
 
 /// --------------------------------------------------------------------------------
@@ -629,7 +629,7 @@ pub struct ToggleBlock {
 #[derive(Deserialize, Serialize)]
 pub struct UnsupportedBlock {
     #[serde(flatten)]
-    base: BaseBlock,
+    pub base: BaseBlock,
 }
 
 /// --------------------------------------------------------------------------------
@@ -639,6 +639,6 @@ pub struct UnsupportedBlock {
 #[derive(Deserialize, Serialize)]
 pub struct VideoBlock {
     #[serde(flatten)]
-    base: BaseBlock,
-    video: FileObject,
+    pub base: BaseBlock,
+    pub video: FileObject,
 }

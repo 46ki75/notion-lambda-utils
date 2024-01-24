@@ -13,34 +13,34 @@ use crate::models::objects::{EmojiObject, FileObject, ParentObject, User};
 #[derive(Deserialize, Serialize)]
 pub struct Page {
     /// Always "page".
-    object: String,
+    pub object: String,
 
     /// Unique identifier of the page.
-    id: String,
+    pub id: String,
 
     /// Date and time when this page was created. Formatted as an ISO 8601 date time string.
-    created_time: String,
+    pub created_time: String,
 
     /// Date and time when this page was updated. Formatted as an ISO 8601 date time string.
-    last_edited_time: String,
+    pub last_edited_time: String,
 
     /// User who created the page.
-    created_by: User,
+    pub created_by: User,
 
     /// User who last edited the page.
-    last_edited_by: User,
+    pub last_edited_by: User,
 
     /// Page cover image.
-    cover: Option<FileObject>,
+    pub cover: Option<FileObject>,
 
     /// Page icon.
-    icon: Option<EmojiObject>,
+    pub icon: Option<EmojiObject>,
 
     /// Information about the page's parent. See Parent object.
-    parent: ParentObject,
+    pub parent: ParentObject,
 
     /// The archived status of the page.
-    archived: bool,
+    pub archived: bool,
 
     /// Property values of this page.
     ///
@@ -54,11 +54,11 @@ pub struct Page {
     ///
     /// - `key string`: Name of a property as it appears in Notion.
     /// - `value object` See Property value object.
-    properties: Value,
+    pub properties: Value,
 
     /// The URL of the Notion page.
-    url: String,
+    pub url: String,
 
     /// The public page URL if the page has been published to the web. Otherwise, null.
-    public_url: Option<String>,
+    pub public_url: Option<String>,
 }
