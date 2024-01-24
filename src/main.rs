@@ -5,8 +5,10 @@ use lambda_runtime::{service_fn, Error, LambdaEvent};
 use serde_json::Value;
 
 mod commands;
-use commands::convert_page_to_html::convert_page_to_html;
-use commands::convert_page_to_markdown::convert_page_to_markdown;
+use crate::commands::convert_page_to_html::convert_page_to_html;
+use crate::commands::convert_page_to_markdown::convert_page_to_markdown;
+
+mod models;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
