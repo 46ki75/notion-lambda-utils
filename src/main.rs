@@ -8,6 +8,7 @@ mod commands;
 use crate::commands::convert_page_to_html::convert_page_to_html;
 use crate::commands::convert_page_to_markdown::convert_page_to_markdown;
 
+mod helpers;
 mod models;
 
 #[tokio::main]

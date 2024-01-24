@@ -33,9 +33,9 @@ pub struct BaseBlock {
 pub struct BlockChildren {
     // always "list"
     object: String,
-    results: Vec<Block>,
-    next_cursor: Option<String>,
-    has_more: bool,
+    pub results: Vec<Block>,
+    pub next_cursor: Option<String>,
+    pub has_more: bool,
     // always "block"
     r#type: String,
     block: Value,
