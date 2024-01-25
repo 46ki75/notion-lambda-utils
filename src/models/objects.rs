@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// for more details - https://developers.notion.com/reference/user
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct User {
     pub object: String, // always "user"
     pub id: String,
@@ -11,7 +11,7 @@ pub struct User {
 }
 
 /// for more details - https://developers.notion.com/reference/emoji-object
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct EmojiObject {
     /// The constant string "emoji" that represents the object type.
     pub r#type: String,
@@ -27,7 +27,7 @@ pub struct EmojiObject {
 /// Pages, databases, and blocks are either located inside other pages, databases, and blocks,
 /// or are located at the top level of a workspace. This location is known as the "parent".
 /// Parent information is represented by a consistent parent object throughout the API.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ParentObject {
     pub r#type: String,
     pub database_id: Option<String>,
@@ -38,7 +38,7 @@ pub struct ParentObject {
 
 /// ## File - Struct
 /// for more details - https://developers.notion.com/reference/file-object
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct File {
     /// An authenticated S3 URL to the file.
     /// The URL is valid for **one hour**.
@@ -56,7 +56,7 @@ pub struct File {
 ///
 /// An external file is any URL linked to in Notion that isn’t hosted by Notion.
 /// All external files have a type of "external".
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct External {
     /// A link to the externally hosted content.
     pub url: String,
@@ -68,14 +68,31 @@ pub struct External {
 ///
 /// File objects contain data about a file that is uploaded to Notion,
 /// or data about an external file that is linked to in Notion.
-#[derive(Deserialize, Serialize)]
-pub struct FileObject {
+// #[derive(Deserialize, Serialize, Debug)]
+// pub struct FileObject {
+//     /// The type of the file object. Possible type values are: "external", "file".
+//     pub r#type: String,
+
+//     /// An object containing type-specific configuration. The key of the object is
+//     /// external for external files, and file for Notion-hosted files.
+//     /// Refer to the type sections below for details on type-specific values.
+//     pub external: Option<External>,
+//     pub file: Option<File>,
+// }
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum FileObject {
     /// The type of the file object. Possible type values are: "external", "file".
-    pub r#type: String,
+    // pub r#type: String,
 
     /// An object containing type-specific configuration. The key of the object is
     /// external for external files, and file for Notion-hosted files.
     /// Refer to the type sections below for details on type-specific values.
-    pub external: Option<External>,
-    pub file: Option<File>,
+    External {
+        external: External,
+    },
+    File {
+        file: File,
+    },
 }

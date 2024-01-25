@@ -16,7 +16,7 @@ use crate::models::rich_text::{RichText, RichTextElement};
 /// A block object represents a piece of content within Notion.
 /// The API translates the headings, toggles, paragraphs, lists, media,
 /// and more that you can interact with in the Notion UI as different block type objects.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct BaseBlock {
     pub object: String,
     pub id: String,
@@ -29,7 +29,7 @@ pub struct BaseBlock {
     pub archived: bool,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct BlockChildren {
     // always "list"
     pub object: String,
@@ -42,7 +42,7 @@ pub struct BlockChildren {
     pub request_id: String,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Block {
     Bookmark(BookmarkBlock),
@@ -70,7 +70,7 @@ pub enum Block {
     NumberedListItem(NumberedListItemBlock),
     Mention(MentionBlock),
     Paragraph(ParagraphBlock),
-    Pdf(PDFBlock),
+    Pdf(PdfBlock),
     Quote(QuoteBlock),
     SyncedBlock(SyncedBlock),
     Table(TableBlock),
@@ -87,14 +87,14 @@ pub enum Block {
 /// Bookmark
 /// https://developers.notion.com/reference/block#bookmark
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct BookmarkBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub bookmark: BookmarkField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct BookmarkField {
     pub caption: Vec<RichTextElement>,
     pub url: String,
@@ -104,7 +104,7 @@ pub struct BookmarkField {
 /// Breadcrumb
 /// https://developers.notion.com/reference/block#breadcrumb
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct BreadcrumbBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -115,7 +115,7 @@ pub struct BreadcrumbBlock {
 /// Bulleted list item
 /// https://developers.notion.com/reference/block#bulleted-list-item
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct BulletedListItemBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -126,14 +126,14 @@ pub struct BulletedListItemBlock {
 /// Callout
 /// https://developers.notion.com/reference/block#callout
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct CalloutBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub callout: CalloutField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct CalloutField {
     pub rich_text: Vec<RichTextElement>,
     pub icon: EmojiObject,
@@ -144,7 +144,7 @@ pub struct CalloutField {
 /// Child database
 /// https://developers.notion.com/reference/block#child-database
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ChildDatabaseBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -155,7 +155,7 @@ pub struct ChildDatabaseBlock {
 /// Child page
 /// https://developers.notion.com/reference/block#child-page
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ChildPageBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -166,14 +166,14 @@ pub struct ChildPageBlock {
 /// Code
 /// https://developers.notion.com/reference/block#code
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct CodeBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub code: CodeField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct CodeField {
     pub caption: Vec<RichTextElement>,
     pub rich_text: Vec<RichTextElement>,
@@ -328,11 +328,90 @@ pub enum ProgrammingLanguage {
     JavaCCppCSharp,
 }
 
+impl ProgrammingLanguage {
+    pub fn to_class_name(&self) -> &str {
+        match self {
+            ProgrammingLanguage::Abap => "language-abap",
+            ProgrammingLanguage::Arduino => "language-arduino",
+            ProgrammingLanguage::Bash => "language-bash",
+            ProgrammingLanguage::Basic => "language-basic",
+            ProgrammingLanguage::C => "language-c",
+            ProgrammingLanguage::Clojure => "language-clojure",
+            ProgrammingLanguage::Coffeescript => "language-coffeescript",
+            ProgrammingLanguage::Cpp => "language-cpp",
+            ProgrammingLanguage::CSharp => "language-csharp",
+            ProgrammingLanguage::Css => "language-css",
+            ProgrammingLanguage::Dart => "language-dart",
+            ProgrammingLanguage::Diff => "language-diff",
+            ProgrammingLanguage::Docker => "language-docker",
+            ProgrammingLanguage::Elixir => "language-elixir",
+            ProgrammingLanguage::Elm => "language-elm",
+            ProgrammingLanguage::Erlang => "language-erlang",
+            ProgrammingLanguage::Flow => "language-flow",
+            ProgrammingLanguage::Fortran => "language-fortran",
+            ProgrammingLanguage::FSharp => "language-fsharp",
+            ProgrammingLanguage::Gherkin => "language-gherkin",
+            ProgrammingLanguage::Glsl => "language-glsl",
+            ProgrammingLanguage::Go => "language-go",
+            ProgrammingLanguage::Graphql => "language-graphql",
+            ProgrammingLanguage::Groovy => "language-groovy",
+            ProgrammingLanguage::Haskell => "language-haskell",
+            ProgrammingLanguage::Html => "language-html",
+            ProgrammingLanguage::Java => "language-java",
+            ProgrammingLanguage::Javascript => "language-javascript",
+            ProgrammingLanguage::Json => "language-json",
+            ProgrammingLanguage::Julia => "language-julia",
+            ProgrammingLanguage::Kotlin => "language-kotlin",
+            ProgrammingLanguage::Latex => "language-latex",
+            ProgrammingLanguage::Less => "language-less",
+            ProgrammingLanguage::Lisp => "language-lisp",
+            ProgrammingLanguage::Livescript => "language-livescript",
+            ProgrammingLanguage::Lua => "language-lua",
+            ProgrammingLanguage::Makefile => "language-makefile",
+            ProgrammingLanguage::Markdown => "language-markdown",
+            ProgrammingLanguage::Markup => "language-markup",
+            ProgrammingLanguage::Matlab => "language-matlab",
+            ProgrammingLanguage::Mermaid => "language-mermaid",
+            ProgrammingLanguage::Nix => "language-nix",
+            ProgrammingLanguage::ObjectiveC => "language-objectivec",
+            ProgrammingLanguage::Ocaml => "language-ocaml",
+            ProgrammingLanguage::Pascal => "language-pascal",
+            ProgrammingLanguage::Perl => "language-perl",
+            ProgrammingLanguage::Php => "language-php",
+            ProgrammingLanguage::PlainText => "language-plaintext",
+            ProgrammingLanguage::Powershell => "language-powershell",
+            ProgrammingLanguage::Prolog => "language-prolog",
+            ProgrammingLanguage::Protobuf => "language-protobuf",
+            ProgrammingLanguage::Python => "language-python",
+            ProgrammingLanguage::R => "language-r",
+            ProgrammingLanguage::Reason => "language-reason",
+            ProgrammingLanguage::Ruby => "language-ruby",
+            ProgrammingLanguage::RustLang => "language-rust",
+            ProgrammingLanguage::Sass => "language-sass",
+            ProgrammingLanguage::Scala => "language-scala",
+            ProgrammingLanguage::Scheme => "language-scheme",
+            ProgrammingLanguage::Scss => "language-scss",
+            ProgrammingLanguage::Shell => "language-shell",
+            ProgrammingLanguage::Sql => "language-sql",
+            ProgrammingLanguage::Swift => "language-swift",
+            ProgrammingLanguage::Typescript => "language-typescript",
+            ProgrammingLanguage::VbNet => "language-vbnet",
+            ProgrammingLanguage::Verilog => "language-verilog",
+            ProgrammingLanguage::Vhdl => "language-vhdl",
+            ProgrammingLanguage::VisualBasic => "language-visualbasic",
+            ProgrammingLanguage::WebAssembly => "language-webassembly",
+            ProgrammingLanguage::Xml => "language-xml",
+            ProgrammingLanguage::Yaml => "language-yaml",
+            ProgrammingLanguage::JavaCCppCSharp => "language-javac-cpp-csharp",
+        }
+    }
+}
+
 /// --------------------------------------------------------------------------------
 /// Column
 /// https://developers.notion.com/reference/block#column-list-and-column
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ColumnBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -343,7 +422,7 @@ pub struct ColumnBlock {
 /// Column list
 /// https://developers.notion.com/reference/block#column-list-and-column
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ColumnListBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -354,7 +433,7 @@ pub struct ColumnListBlock {
 /// Divider
 /// https://developers.notion.com/reference/block#divider
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct DividerBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -365,14 +444,14 @@ pub struct DividerBlock {
 /// Embed
 /// https://developers.notion.com/reference/block#embed
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct EmbedBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub embed: EmbedField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct EmbedField {
     pub url: String,
 }
@@ -381,14 +460,14 @@ pub struct EmbedField {
 /// Equation
 /// https://developers.notion.com/reference/block#equation
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct EquationBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub equation: EquationField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct EquationField {
     pub expression: String,
 }
@@ -397,7 +476,7 @@ pub struct EquationField {
 /// File
 /// https://developers.notion.com/reference/block#file
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct FileBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -408,21 +487,21 @@ pub struct FileBlock {
 /// Heading
 /// https://developers.notion.com/reference/block#headings
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Heading1Block {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub heading_1: RichText,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Heading2Block {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub heading_2: RichText,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Heading3Block {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -433,7 +512,7 @@ pub struct Heading3Block {
 /// Image
 /// https://developers.notion.com/reference/block#image
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ImageBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -444,14 +523,14 @@ pub struct ImageBlock {
 /// Link Preview
 /// https://developers.notion.com/reference/block#link-preview
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct LinkPreviewBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub link_preview: LinkPreviewField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct LinkPreviewField {
     pub url: String,
 }
@@ -460,7 +539,7 @@ pub struct LinkPreviewField {
 /// Numbered list item
 /// https://developers.notion.com/reference/block#numbered-list-item
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct NumberedListItemBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -471,14 +550,14 @@ pub struct NumberedListItemBlock {
 /// Mention
 /// https://developers.notion.com/reference/block#mention
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct MentionBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub page: MentionField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct MentionField {
     pub id: String,
 }
@@ -487,7 +566,7 @@ pub struct MentionField {
 /// Paragraph
 /// https://developers.notion.com/reference/block#paragraph
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ParagraphBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -498,8 +577,8 @@ pub struct ParagraphBlock {
 /// PDF
 /// https://developers.notion.com/reference/block#pdf
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
-pub struct PDFBlock {
+#[derive(Deserialize, Serialize, Debug)]
+pub struct PdfBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub pdf: PDFField,
@@ -516,7 +595,7 @@ pub enum PDFField {
 /// Quote
 /// https://developers.notion.com/reference/block#quote
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct QuoteBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -527,7 +606,7 @@ pub struct QuoteBlock {
 /// Synced Block
 /// https://developers.notion.com/reference/block#synced-block
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct SyncedBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -538,14 +617,14 @@ pub struct SyncedBlock {
 /// Table
 /// https://developers.notion.com/reference/block#table
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TableBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub table: TableField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TableField {
     pub table_width: u32,
     pub has_column_header: bool,
@@ -556,14 +635,14 @@ pub struct TableField {
 /// Table of contents
 /// https://developers.notion.com/reference/block#table-of-contents
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TableOfContentsBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub table_of_contents: TableOfContentsField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TableOfContentsField {
     pub color: Color,
 }
@@ -572,14 +651,14 @@ pub struct TableOfContentsField {
 /// Table rows
 /// https://developers.notion.com/reference/block#table-rows
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TableRowBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
     pub table_row: TableRowField,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TableRowField {
     pub cells: Vec<Vec<RichTextElement>>,
 }
@@ -594,7 +673,7 @@ pub struct TableRowField {
 ///
 /// https://developers.notion.com/reference/block#template
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TemplateBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -605,7 +684,7 @@ pub struct TemplateBlock {
 /// To do
 /// https://developers.notion.com/reference/block#to-do
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ToDoBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -616,7 +695,7 @@ pub struct ToDoBlock {
 /// Toggle blocks
 /// https://developers.notion.com/reference/block#toggle-blocks
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct ToggleBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -626,7 +705,7 @@ pub struct ToggleBlock {
 /// --------------------------------------------------------------------------------
 /// Unsupported
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct UnsupportedBlock {
     #[serde(flatten)]
     pub base: BaseBlock,
@@ -636,7 +715,7 @@ pub struct UnsupportedBlock {
 /// Video
 /// https://developers.notion.com/reference/block#video
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct VideoBlock {
     #[serde(flatten)]
     pub base: BaseBlock,

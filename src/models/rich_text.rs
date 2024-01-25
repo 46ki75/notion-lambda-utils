@@ -21,7 +21,7 @@ use crate::models::common::Color;
 /// an array of rich text objects will be included in the block object (when available).
 ///  Developers can use this array to retrieve the plain text (plain_text)
 /// for the block or get all the rich text styling and formatting options applied to the block.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 // The type is determined based on the value of the type field.
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum RichTextElement {
@@ -45,17 +45,104 @@ pub enum RichTextElement {
     },
 }
 
-#[derive(Deserialize, Serialize)]
+impl RichTextElement {
+    // このメソッドはRichTextElementのplain_textを返します
+    pub fn to_html(&self) -> String {
+        let (plain_text, annotations, href) = match self {
+            RichTextElement::Text {
+                plain_text,
+                annotations,
+                href,
+                ..
+            }
+            | RichTextElement::Mention {
+                plain_text,
+                annotations,
+                href,
+                ..
+            }
+            | RichTextElement::Equation {
+                plain_text,
+                annotations,
+                href,
+                ..
+            } => (plain_text, annotations, href),
+        };
+
+        let mut html = String::from("<span class='notion-rich-text'>");
+
+        // start tag
+        match href {
+            Some(link) => html.push_str(&format!("<a href='{}'>", link)),
+            None => {}
+        };
+        if annotations.code {
+            html.push_str("<code>");
+        }
+        if annotations.bold {
+            html.push_str("<strong>");
+        }
+        if annotations.italic {
+            html.push_str("<em>");
+        }
+        if annotations.strikethrough {
+            html.push_str("<del>");
+        }
+        if annotations.underline {
+            html.push_str("<ins>");
+        }
+
+        // insert text
+        html.push_str(plain_text);
+
+        // end tag (in reverse order)
+        if annotations.underline {
+            html.push_str("</ins>");
+        }
+        if annotations.strikethrough {
+            html.push_str("</del>");
+        }
+        if annotations.italic {
+            html.push_str("</em>");
+        }
+        if annotations.bold {
+            html.push_str("</strong>");
+        }
+        if annotations.code {
+            html.push_str("</code>");
+        }
+        match href {
+            Some(_) => html.push_str("</a>"),
+            None => {}
+        };
+
+        html.push_str("</span>");
+
+        html
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
 pub struct RichText {
     pub rich_text: Vec<RichTextElement>,
     pub is_toggleable: Option<bool>,
     pub color: Color,
 }
 
+impl RichText {
+    pub fn to_html(&self) -> String {
+        let mut html = String::new();
+        for rich_text_element in &self.rich_text {
+            html.push_str(&rich_text_element.to_html());
+        }
+        html
+    }
+}
+
 /// --------------------------------------------------------------------------------
 /// ## Equation - Struct
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Equation {
     /// The LaTeX string representing the inline equation.
     pub expression: String,
@@ -64,7 +151,7 @@ pub struct Equation {
 /// --------------------------------------------------------------------------------
 /// ## Mention - Struct
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Mention {
     Database { database: DatabaseMention },
@@ -75,28 +162,28 @@ pub enum Mention {
     User { user: UserMention },
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct DatabaseMention {
     pub id: String,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct DateMention {
     pub start: Option<String>,
     pub end: Option<String>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct LinkPreviewMention {
     pub url: String,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct PageMention {
     pub id: String,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct UserMention {
     pub id: String,
 }
@@ -104,7 +191,7 @@ pub struct UserMention {
 /// --------------------------------------------------------------------------------
 /// ## Text - Struct
 /// --------------------------------------------------------------------------------
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Text {
     /// The actual text content of the text.
     pub content: String,
@@ -115,13 +202,13 @@ pub struct Text {
     pub link: Option<Link>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Link {
     /// The URL's string web address.
     pub url: String,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Annotations {
     /// Whether the text is bolded.
     pub bold: bool,

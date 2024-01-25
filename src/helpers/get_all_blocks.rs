@@ -1,13 +1,11 @@
 use lambda_runtime::Error;
-use serde_json::{from_str, json, Value};
+use serde_json::from_str;
 
 use reqwest::{header, Client};
 
-use crate::models::block::BlockChildren;
+use crate::models::block::{Block, BlockChildren};
 
-pub async fn get_all_blocks(event: Value) -> Result<Value, Error> {
-    let notion_api_key = event["NOTION_API_KEY"].as_str().unwrap_or("NO_TOKEN");
-
+pub async fn get_all_blocks(notion_api_key: &str, block_id: &str) -> Result<Vec<Block>, Error> {
     let client = Client::new();
 
     let mut has_more = true;
@@ -16,10 +14,7 @@ pub async fn get_all_blocks(event: Value) -> Result<Value, Error> {
     let mut blocks = Vec::new();
 
     while has_more {
-        let base_url = format!(
-            "https://api.notion.com/v1/blocks/{}/children",
-            "29af298cf2b74f9190c105439ecb5b25"
-        );
+        let base_url = format!("https://api.notion.com/v1/blocks/{}/children", block_id);
         let page_size = 100;
         let url = match &next_cursor {
             Some(cursor) => format!(
@@ -49,5 +44,5 @@ pub async fn get_all_blocks(event: Value) -> Result<Value, Error> {
         next_cursor = page.next_cursor;
     }
 
-    Ok(json!(blocks))
+    Ok(blocks)
 }
