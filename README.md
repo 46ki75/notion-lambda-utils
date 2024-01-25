@@ -42,5 +42,17 @@ For basic functions that only receive events with a `command` field in the paylo
 
 ```bash
 cargo lambda start
-cargo lambda invoke --data-ascii '{ "command": "convert_page_to_html" }'
+
+cargo lambda invoke --data-ascii '{ "command": "convert_page_to_html", "NOTION_API_KEY": "secret_*****", "block_id": "*****" }'
+cargo lambda invoke --data-ascii '{ "command": "convert_page_to_markdown", "NOTION_API_KEY": "secret_*****", "block_id": "*****" }'
+
+NOTION_API_KEY="secret_*****"
+BLOCK_ID="*****"
+JSON_PAYLOAD=$(jq -n \
+                  --arg cmd "convert_page_to_html" \
+                  --arg key "$NOTION_API_KEY" \
+                  --arg bid "$BLOCK_ID" \
+                  '{command: $cmd, NOTION_API_KEY: $key, block_id: $bid}')
+
+cargo lambda invoke --data-ascii "$JSON_PAYLOAD"
 ```

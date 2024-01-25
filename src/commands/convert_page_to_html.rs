@@ -1,28 +1,28 @@
 use async_recursion::async_recursion;
 use lambda_runtime::Error;
-use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::Value;
 
+use crate::helpers::fetch_title::fetch_title;
 use crate::helpers::get_all_blocks::get_all_blocks;
 
 use crate::models::block::Block;
 
 use crate::models::objects::FileObject;
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct HTMLResponse {
-    pub html: String,
-}
+pub async fn convert_page_to_html_command(event: Value) -> Result<String, Error> {
+    let notion_api_key = event["NOTION_API_KEY"]
+        .as_str()
+        .ok_or_else(|| Error::from("The NOTION_API_KEY field is missing or not a string"))?;
 
-pub async fn convert_page_to_html_command(
-    notion_api_key: &str,
-    block_id: &str,
-) -> Result<Value, Error> {
+    let block_id = event["block_id"]
+        .as_str()
+        .ok_or_else(|| Error::from("The NOTION_API_KEY field is missing or not a string"))?;
+
     let html = convert_page_to_html(notion_api_key, block_id).await;
-    let response = HTMLResponse {
-        html: html.unwrap(),
-    };
-    Ok(json!(response))
+    match html {
+        Ok(html) => Ok(html),
+        Err(e) => Err(Error::from(e)),
+    }
 }
 
 #[async_recursion]
@@ -33,9 +33,10 @@ pub async fn convert_page_to_html(notion_api_key: &str, block_id: &str) -> Resul
     for block in &blocks {
         match block {
             Block::Bookmark(bookmark_block) => {
+                let title = fetch_title(&bookmark_block.bookmark.url).await.unwrap();
                 html.push(format!(
-                    "<a href='{}' class='notion-bookmark'></a>",
-                    bookmark_block.bookmark.url
+                    "<a href='{}' class='notion-bookmark'>{}</a>",
+                    bookmark_block.bookmark.url, title
                 ));
             }
 
@@ -67,10 +68,15 @@ pub async fn convert_page_to_html(notion_api_key: &str, block_id: &str) -> Resul
             }
 
             Block::Code(code_block) => {
+                let mut code_text = String::new();
+                for rich_text in &code_block.code.rich_text {
+                    code_text.push_str(&rich_text.to_plaintext());
+                }
                 html.push(format!(
-                    "<div class='notion-code'><pre class='{}'><code class='language-{}'></code></pre></div>",
+                    "<div class='notion-code'><pre class='{}'><code class='language-{}'>{}</code></pre></div>",
                     code_block.code.language.to_class_name(),
                     code_block.code.language.to_class_name(),
+                    code_text
                 ));
             }
 
@@ -147,10 +153,10 @@ pub async fn convert_page_to_html(notion_api_key: &str, block_id: &str) -> Resul
                 println!("LinkPreview is unsupported!");
             }
 
-            Block::NumberedListItem(bulleted_list_item_block) => {
+            Block::NumberedListItem(numberted_list_item_block) => {
                 html.push(format!(
                     "<li class='notion-numbered-list-item'>{}</li>",
-                    bulleted_list_item_block.numbered_list_item.to_html()
+                    numberted_list_item_block.numbered_list_item.to_html()
                 ));
             }
 
@@ -257,7 +263,6 @@ pub async fn convert_page_to_html(notion_api_key: &str, block_id: &str) -> Resul
         }
     }
 
-    // Ok(html.join(""))
     Ok(wrap_list_items(html))
 }
 

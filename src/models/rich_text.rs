@@ -46,7 +46,6 @@ pub enum RichTextElement {
 }
 
 impl RichTextElement {
-    // このメソッドはRichTextElementのplain_textを返します
     pub fn to_html(&self) -> String {
         let (plain_text, annotations, href) = match self {
             RichTextElement::Text {
@@ -120,6 +119,58 @@ impl RichTextElement {
 
         html
     }
+
+    pub fn to_markdown(&self) -> String {
+        let (plain_text, annotations, href) = match self {
+            RichTextElement::Text {
+                plain_text,
+                annotations,
+                href,
+                ..
+            }
+            | RichTextElement::Mention {
+                plain_text,
+                annotations,
+                href,
+                ..
+            }
+            | RichTextElement::Equation {
+                plain_text,
+                annotations,
+                href,
+                ..
+            } => (plain_text, annotations, href),
+        };
+
+        let mut markdown = String::new();
+
+        match href {
+            Some(link) => {
+                markdown.push_str(&format!("[{}]({})", plain_text, link));
+            }
+            None => {
+                if annotations.code {
+                    markdown.push_str(&format!("`{}`", plain_text));
+                } else if annotations.bold {
+                    markdown.push_str(&format!("**{}**", plain_text));
+                } else if annotations.italic {
+                    markdown.push_str(&format!("*{}*", plain_text));
+                } else if annotations.strikethrough {
+                    markdown.push_str(&format!("~{}~", plain_text));
+                }
+            }
+        };
+
+        markdown
+    }
+
+    pub fn to_plaintext(&self) -> String {
+        match self {
+            RichTextElement::Text { plain_text, .. }
+            | RichTextElement::Mention { plain_text, .. }
+            | RichTextElement::Equation { plain_text, .. } => plain_text.clone(),
+        }
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -136,6 +187,23 @@ impl RichText {
             html.push_str(&rich_text_element.to_html());
         }
         html
+    }
+
+    pub fn to_markdown(&self) -> String {
+        let mut markdown = String::new();
+        for rich_text_element in &self.rich_text {
+            markdown.push_str(&rich_text_element.to_markdown());
+        }
+        markdown
+    }
+
+    #[allow(dead_code)]
+    pub fn to_plaintext(&self) -> String {
+        let mut text = String::new();
+        for rich_text_element in &self.rich_text {
+            text.push_str(&rich_text_element.to_markdown());
+        }
+        text
     }
 }
 
