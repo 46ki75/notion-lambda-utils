@@ -68,9 +68,30 @@ impl RichTextElement {
             } => (plain_text, annotations, href),
         };
 
-        let mut html = String::from("<span class='notion-rich-text'>");
+        let color_class = match annotations.color {
+            Color::Blue => "blue",
+            Color::BlueBackground => "blue-background",
+            Color::Brown => "brown",
+            Color::BrownBackground => "brown-background",
+            Color::Default => "default",
+            Color::Gray => "gray",
+            Color::GrayBackground => "gray-background",
+            Color::Green => "green",
+            Color::GreenBackground => "green-background",
+            Color::Orange => "orange",
+            Color::OrangeBackground => "orange-background",
+            Color::Pink => "pink",
+            Color::PinkBackground => "pink-background",
+            Color::Purple => "purple",
+            Color::PurpleBackground => "purple-background",
+            Color::Red => "red",
+            Color::RedBackground => "red-background",
+            Color::Yellow => "yellow",
+            Color::YellowBackground => "yellow-background",
+        };
 
-        // start tag
+        let mut html = format!("<span class='notion-rich-text {}'>", color_class);
+
         match href {
             Some(link) => html.push_str(&format!("<a href='{}'>", link)),
             None => {}
