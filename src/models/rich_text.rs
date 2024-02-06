@@ -92,6 +92,13 @@ impl RichTextElement {
 
         let mut html = format!("<span class='notion-rich-text {}'>", color_class);
 
+        let escaped_plain_text = plain_text
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#39;");
+
         match href {
             Some(link) => html.push_str(&format!("<a href='{}'>", link)),
             None => {}
@@ -113,7 +120,7 @@ impl RichTextElement {
         }
 
         // insert text
-        html.push_str(plain_text);
+        html.push_str(&escaped_plain_text);
 
         // end tag (in reverse order)
         if annotations.underline {
