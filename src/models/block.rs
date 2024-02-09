@@ -308,6 +308,8 @@ pub enum ProgrammingLanguage {
     Sql,
     #[serde(rename = "swift")]
     Swift,
+    #[serde(rename = "toml")]
+    Toml,
     #[serde(rename = "typescript")]
     Typescript,
     #[serde(rename = "vb.net")]
@@ -394,6 +396,7 @@ impl ProgrammingLanguage {
             ProgrammingLanguage::Shell => "shell",
             ProgrammingLanguage::Sql => "sql",
             ProgrammingLanguage::Swift => "swift",
+            ProgrammingLanguage::Toml => "toml",
             ProgrammingLanguage::Typescript => "typescript",
             ProgrammingLanguage::VbNet => "vbnet",
             ProgrammingLanguage::Verilog => "verilog",
